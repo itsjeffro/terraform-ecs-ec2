@@ -12,7 +12,7 @@ Resources created:
 - EC2 related resources
   - ec2 instance
   - launch configuration
-  - auto scaling group
+  - auto-scaling group
 
 ## Commands
 
