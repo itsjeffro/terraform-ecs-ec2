@@ -25,14 +25,15 @@ EOT
 
 resource "aws_launch_configuration" "lc" {
   associate_public_ip_address = true
-  name_prefix = null
-  name   = "ecs-${local.cluster_name}-lc"
 
-  key_name = ${local.key_name}
-  image_id      = "ami-0a5d07e2b337abadb"
-  instance_type = "t2.micro"
+  name_prefix = null
+  name        = "ecs-${local.cluster_name}-lc"
+
+  key_name             = ${local.key_name}
+  image_id             = "ami-0a5d07e2b337abadb"
+  instance_type        = "t2.micro"
   iam_instance_profile = "arn:aws:iam::375605501954:instance-profile/ecsInstanceRole"
-  ebs_optimized = false
+  ebs_optimized        = false
 
   security_groups = [
     ${local.security_groups}
@@ -49,18 +50,20 @@ resource "aws_launch_configuration" "lc" {
 }
 
 resource "aws_autoscaling_group" "asg" {
-  name_prefix          = null
-  name                 = "ecs-${local.cluster_name}-asg"
-  availability_zones   = [
+  name_prefix = null
+  name        = "ecs-${local.cluster_name}-asg"
+
+  availability_zones = [
     "ap-southeast-2b",
     "ap-southeast-2a",
     "ap-southeast-2c"
   ]
+
   launch_configuration = aws_launch_configuration.lc.name
 
-  min_size             = 0
-  max_size             = 1
-  desired_capacity     = 1
+  min_size         = 0
+  max_size         = 1
+  desired_capacity = 1
 
   health_check_grace_period = 0
 
@@ -82,13 +85,15 @@ resource "aws_autoscaling_group" "asg" {
 resource "aws_ecs_task_definition" "task" {
   family                   = "task"
   requires_compatibilities = ["EC2"]
-  network_mode             = "bridge"
-  memory                   = 128
-  cpu                      = 1024
-  container_definitions    = <<DEFINITION
+
+  network_mode = "bridge"
+  memory       = 128
+  cpu          = 1024
+
+  container_definitions = <<DEFINITION
     [
       {
-        "name": "task-web",
+        "name": "container-web",
         "image": "public.ecr.aws/lts/nginx:latest",
         "essential": true,
         "portMappings": [
